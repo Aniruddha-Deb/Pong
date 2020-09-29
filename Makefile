@@ -1,10 +1,7 @@
-# A simple Makefile for compiling small SDL projects
-
-# set the compiler
 CC := gcc
 
-# set the compiler flags
-CFLAGS := -std=c99 -Wall -lSDL2 -lSDL2_image -lm
+CFLAGS := -std=c99 -Wall 
+LDFLAGS := -lSDL2 -lSDL2_image -lm
 
 all:
-	$(CC) pong.c -o pong $(CFLAGS)
+	$(CC) $(CFLAGS) *.c *.h -o bin/pong $(LDFLAGS)
