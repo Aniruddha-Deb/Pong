@@ -8,7 +8,7 @@ class PanelStack;
 
 class Panel {
 	PanelStack *pstack;
-	SDL_Renderer *renderer
+	SDL_Renderer *renderer;
 
 	public:
 	Panel(PanelStack*, SDL_Renderer*);
@@ -26,7 +26,7 @@ class PanelStack {
 	Panel* pop();
 	int push(Panel* panel);
 	int resize(int newSize);
-}
+};
 
 class GamePanel: public Panel {
 	Body *ball;
@@ -35,19 +35,16 @@ class GamePanel: public Panel {
 
 	public:
 	GamePanel(PanelStack*, SDL_Renderer*);
-	void update_panel(SDL_Event*) override;
 };
 
 class MainMenuPanel: public Panel {
 	public:
 	MainMenuPanel(PanelStack*, SDL_Renderer*);
-	void update_panel(SDL_Event*) override;
 };	
 
 class SettingsMenuPanel: public Panel {
 	public:
 	SettingsMenuPanel(PanelStack*, SDL_Renderer*);
-	void update_panel(SDL_Event*) override;
 };
 
 #endif

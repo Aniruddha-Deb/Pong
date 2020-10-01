@@ -5,5 +5,3 @@ Panel::Panel(PanelStack *stack, SDL_Renderer *rend) {
 	renderer = rend;
 }
 
-void updatePanel(SDL_Event *e) {
-	
