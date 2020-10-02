@@ -1,7 +1,7 @@
 CC = g++
 
 CPPFLAGS = -std=c++14 -Wall 
-LDFLAGS = -lSDL2 -lSDL2_image -lm
+LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lm
 
 OBJDIR = obj
 

@@ -4,6 +4,8 @@
 #include <stack>
 #include "physics.hpp"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <string>
 
 class Panel {
 	protected:
@@ -22,14 +24,32 @@ class GamePanel: public Panel {
 	Body *paddle2;
 
 	public:
-	using Panel::Panel;
+	GamePanel(std::stack<Panel*>*, SDL_Renderer*);
 	void update(SDL_Event*) override;
 	void destroy() override;
 };
 
-class MainMenuPanel: public Panel {
+class MenuItem {
 	public:
-	using Panel::Panel;
+	std::string text;
+	SDL_Color color;
+	Vec2 pos;
+	std::string *options;
+
+	MenuItem(std::string t, Vec2 pos, std::string *opt);
+	~MenuItem();
+	void render(TTF_Font*, SDL_Renderer*);
+	void renderActive(TTF_Font*, SDL_Renderer*);
+};
+
+class MainMenuPanel: public Panel {
+	private:
+	SDL_Texture *background;
+	MenuItem **menuitems;
+	TTF_Font *font;
+
+	public:
+	MainMenuPanel(std::stack<Panel*>*, SDL_Renderer*);
 	void update(SDL_Event*) override;
 	void destroy() override;
 };

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stack>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "panel.hpp"
 #include "pong.hpp"
 
@@ -19,9 +20,10 @@ Game::~Game() {
 }
 
 void Game::launch() {
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO); // TODO error checking here.
+	TTF_Init(); // error checking here also..
 	initWindow();
-	SDL_Renderer *renderer = SDL_GetRenderer(win);
+	SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED); // Should be SDL_CreateRenderer?
 	createPanelStack(renderer);
 	launchMainLoop();
 }

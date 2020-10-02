@@ -3,11 +3,10 @@
 
 #define real float
 
-class Vec2 {
-	public:
+typedef struct {
 	real x;
 	real y;
-};
+} Vec2;
 
 class Body {
 	public:
