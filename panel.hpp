@@ -1,31 +1,19 @@
 #ifndef PANEL_HPP
 #define PANEL_HPP
 
-#include <SDL2/SDL.h>
+#include <stack>
 #include "physics.hpp"
-
-class PanelStack;
+#include <SDL2/SDL.h>
 
 class Panel {
-	PanelStack *pstack;
+	protected:
+	std::stack<Panel*> *pstack;
 	SDL_Renderer *renderer;
 
 	public:
-	Panel(PanelStack*, SDL_Renderer*);
-	virtual void updatePanel(SDL_Event*) = 0;
-};
-
-class PanelStack {
-	public:
-	Panel **panels;
-	int size;
-	int head;
-
-	PanelStack(int size);
-	~PanelStack();
-	Panel* pop();
-	int push(Panel* panel);
-	int resize(int newSize);
+	Panel(std::stack<Panel*>*, SDL_Renderer*);
+	virtual void destroy() = 0;
+	virtual void update(SDL_Event*) = 0;
 };
 
 class GamePanel: public Panel {
@@ -34,17 +22,15 @@ class GamePanel: public Panel {
 	Body *paddle2;
 
 	public:
-	GamePanel(PanelStack*, SDL_Renderer*);
+	using Panel::Panel;
+	void update(SDL_Event*) override;
+	void destroy() override;
 };
 
 class MainMenuPanel: public Panel {
 	public:
-	MainMenuPanel(PanelStack*, SDL_Renderer*);
-};	
-
-class SettingsMenuPanel: public Panel {
-	public:
-	SettingsMenuPanel(PanelStack*, SDL_Renderer*);
+	using Panel::Panel;
+	void update(SDL_Event*) override;
+	void destroy() override;
 };
-
 #endif
