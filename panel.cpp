@@ -126,7 +126,6 @@ void MainMenuPanel::update(SDL_Event *e) {
 		else if(e->key.keysym.sym == SDLK_UP) {
 			activeMenuItem = (activeMenuItem-1);
 			if (activeMenuItem < 0) {
-				std::cout << "Went neg" << std::endl;
 				activeMenuItem = (activeMenuItem+menuitems->size());
 			}
 			activeMenuItem %= menuitems->size();

@@ -10,6 +10,9 @@ DEPS = panel.hpp physics.hpp settings.hpp
 _OBJ = panel.o physics.o pong.o settings.o
 OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
 
+pong: pong.c pong.h vector.h
+	gcc -std=c99 -Wall pong.c pong.h vector.h -o pong $(LDFLAGS)
+
 $(OBJDIR)/%.o: %.cpp $(DEPS)
 	$(CC) $(CPPFLAGS) -c $< -o $@
 
