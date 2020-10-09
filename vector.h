@@ -3,7 +3,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846264338327950288
+#endif
 
 typedef struct {
 	float x;
@@ -23,6 +28,13 @@ Vector2* vec2_new(float x, float y) {
 	return vec;
 }
 
+Vector2* vec2_from_angle(float mag, float ang) {
+	Vector2 *vec = malloc(sizeof(Vector2));
+	vec->x = mag*cos(ang*M_PI/180);
+	vec->y = mag*sin(ang*M_PI/180);
+	return vec;
+}
+
 Vector3* vec3_new(float x, float y, float z) {
 	Vector3 *vec = malloc(sizeof(Vector3));
 	vec->x = x;
@@ -32,8 +44,13 @@ Vector3* vec3_new(float x, float y, float z) {
 }
 
 // TODO varargs here to destory multiple at once.
-void vec2_destroy(Vector2 *vec) {
-	free(vec);
+void vec2_destroy(int n, ...) {
+	va_list args;
+	va_start(args, n);
+	for (int i=0; i<n; i++) {
+		free(va_arg(args, Vector2*));
+	}
+	va_end(args);
 }
 
 Vector2* vec2_dup(const Vector2 *vec) {
@@ -76,7 +93,7 @@ float vec2_distance_between(const Vector2 *vec1, const Vector2 *vec2) {
 	Vector2 *vec1_dup = vec2_dup(vec1);
 	vec2_subtract(vec1_dup, vec2);
 	float dist = vec2_magnitude(vec1_dup);
-	vec2_destroy(vec1_dup);
+	vec2_destroy(1, vec1_dup);
 	return dist;
 }
 
