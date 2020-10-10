@@ -8,8 +8,12 @@
 #include <inttypes.h>
 
 typedef enum {
-	START, INGAME, END
+	NONE, START, INGAME, END
 } GameState;
+
+typedef enum {
+	WHITE, BLACK
+} Colors;
 
 typedef struct {
 	TTF_Font **fonts;
@@ -18,8 +22,11 @@ typedef struct {
 } Font;
 
 typedef struct {
-	const SDL_Color *fgcolor;
-	const SDL_Color *bgcolor;
+	SDL_Color **colors;
+	size_t n;
+} Palette;
+
+typedef struct {
 	SDL_Renderer *renderer;
 } Renderer;
 
@@ -41,7 +48,7 @@ typedef struct {
 	RectangularBody *p2;
 	uint16_t p1score, p2score;
 	uint16_t maxscore;
-	long lastUpdTime;
+	clock_t lastUpdTime;
 	int pVel;
 	GameState state;
 } Game;
@@ -50,9 +57,13 @@ Font* new_font(char *path, size_t nsizes, ...);
 void destroy_font(Font *f);
 TTF_Font* request_font(Font *f, size_t size);
 
-Renderer* new_renderer(SDL_Renderer *r, const SDL_Color *fg, const SDL_Color *bg);
+Palette* new_palette(size_t size, ...);
+void destroy_palette(Palette *p);
 
-void render_clear_rect(Renderer *r, const Vector2 *start, const Vector2 *end);
+Renderer* new_renderer(SDL_Renderer *r);
+
+void renderer_set_color(Renderer *r, SDL_Color *c);
+void renderer_set_alpha(Renderer *r, uint8_t a);
 
 void render_line   (Renderer *r, const Vector2 *start, const Vector2 *end);
 void render_rect   (Renderer *r, const Vector2 *top_left, const Vector2 *bottom_right);
@@ -60,6 +71,8 @@ void render_circle (Renderer *r, const Vector2 *centre, const float radius);
 void render_text   (Renderer *r, const Vector2 *pos, Font *font, size_t size, const char* text);
 void fill_rect     (Renderer *r, const Vector2 *top_left, const Vector2 *bottom_right);
 void fill_circle   (Renderer *r, const Vector2 *centre, const float radius);
+
+void render_to_screen(Renderer *r);
 
 void destroy_renderer (Renderer *r);
 
