@@ -17,7 +17,7 @@
 #define SCREEN_TITLE "Pong"
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
-#define BALL_RADIUS 20
+#define BALL_RADIUS 15
 #define PADDLE_WIDTH 80
 #define PADDLE_VELOCITY 15
 #define BALL_VELOCITY 300
@@ -185,9 +185,23 @@ void render_game(Renderer *r, Game *g) {
 		render_scores(r, g);
 		render_to_screen(r);
 	}
-}
-
-void render_clear_game(Renderer *r, Game *g) {
+	else if (g->state == END) {	
+		renderer_set_color(r, palette->colors[BLACK]);
+		fill_rect(r, &TOP_LEFT, &BOTTOM_RIGHT);
+		renderer_set_color(r, palette->colors[WHITE]);
+		renderer_set_alpha(r, 0x88);
+		render_game_objects(r, g);
+		render_scores(r, g);
+		
+		char winner[14] = "Player 2 wins";
+		if (g->p1score > g->p2score) winner[7] = '1';
+		Vector2 wLoc = {230, 300};
+		Vector2 pLoc = {180, 330};
+		renderer_set_alpha(r, 0xFF);
+		render_text(r, &wLoc, eight_bit_wonder, 15, winner);
+		render_text(r, &pLoc, eight_bit_wonder, 15, "Press P to play again");
+		render_to_screen(r);
+	}
 }
 
 CircularBody* new_circular_body(Vector2 *pos, float radius) {
@@ -249,9 +263,16 @@ void reset_game(Game *game) {
 }
 	
 void update_game(Game *game, SDL_Event *e) {
-	if (e->type == SDL_KEYDOWN && game->state == START) {
-		game->state = INGAME;
-		reset_game(game);
+	if (e->type == SDL_KEYDOWN) {
+		if (game->state == START) {
+			game->state = INGAME;
+			reset_game(game);
+		}
+		else if(game->state == END && e->key.keysym.scancode == SDL_SCANCODE_P) {
+			game->state = INGAME;
+			game->p1score = game->p2score = 0;
+			reset_game(game);
+		}
 	}
 
 	const uint8_t *state = SDL_GetKeyboardState(NULL);
@@ -274,6 +295,8 @@ void update_game(Game *game, SDL_Event *e) {
 }
 
 void update_game_physics(Game *game, int ticrate) {
+	if (game->state != INGAME) return;
+
 	Vector2 vel = { game->ball->velocity->x*ticrate/1000, 
 				    game->ball->velocity->y*ticrate/1000 };
 	vec2_add(game->ball->centre, &vel);
@@ -301,7 +324,11 @@ void update_game_physics(Game *game, int ticrate) {
 		game->p1score++;
 		reset_game(game);
 	}
-	    
+
+	// win detection
+	if (game->p1score >= game->maxscore || game->p2score >= game->maxscore) {
+		game->state = END;
+	}   
 }
 
 void delete_game(Game *game) {
@@ -428,7 +455,6 @@ int main(int argc, char **argv) {
 	Game *g = new_game(MAX_SCORE, PADDLE_VELOCITY, BALL_RADIUS, PADDLE_WIDTH);
 	
 	while (!quit) {
-		render_clear_game(r, g);
 		while (SDL_PollEvent(&e) != 0) {
 			if (e.type == SDL_QUIT) {
 				quit = true;

@@ -4,6 +4,8 @@ Atari pong remake, with some extra features
 
 ![Pong img](res/ss_1.png)
 ![Pong img2](res/ss_2.png)
+![Pong img3](res/ss_3.png)
+![Pong img4](res/ss_4.png)
 
 -----
 
