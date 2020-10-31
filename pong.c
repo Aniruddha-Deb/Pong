@@ -1,5 +1,4 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_log.h>
 
@@ -12,6 +11,7 @@
 #include <stdbool.h>
 
 #include "vector.h"
+#include "random.h"
 #include "pong.h"
 
 #define SCREEN_TITLE "Pong"
@@ -254,9 +254,8 @@ Game* new_game(int max, int pVel, int rad, int width) {
 void reset_game(Game *game) {
 	game->ball->centre->x = SCREEN_WIDTH/2;
 	game->ball->centre->y = SCREEN_HEIGHT/2;
-	srand(time(NULL));
-	float ang = ((float)rand())/RAND_MAX * 120 - 60;
-	int side = (int)(((float)rand())/RAND_MAX * 2);
+	float ang = get_random_float()*120 - 60;
+	int side = (int)(get_random_float() * 2);
 	if (side == 0) ang += 180;
 	vec2_destroy(1, game->ball->velocity);	
 	game->ball->velocity = vec2_from_angle(BALL_VELOCITY, ang);

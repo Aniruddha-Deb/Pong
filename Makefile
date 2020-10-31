@@ -1,11 +1,11 @@
 CC = gcc
 
 CFLAGS = -std=c99 -Wall 
-LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lm
+LDFLAGS = -lSDL2 -lSDL2_ttf -lm
 
 OBJDIR = obj
 
-DEPS = pong.h vector.h
+DEPS = pong.h vector.h random.h
 
 _OBJ = pong.o
 OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
